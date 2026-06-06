@@ -1,0 +1,20 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+@plugin "tailwind-scrollbar";
+
+
+
+:root {
+  --frameit-purple: #6D28D9;
+  --frameit-green: #019332;
+  --light-black: #1A1A1A;
+  --border-color: #5e5d5d;
+  --bg-black: #151515;
+}
+
+@layer base {
+  html, body {
+    font-family: 'Inter', sans-serif;
+  }
+}
