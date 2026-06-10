@@ -2,6 +2,8 @@ import logo from './assets/logo.png'
 import hamburger  from './assets/hamburger-menu-svgrepo-com.svg'
 import { NavLink } from "react-router-dom"
 import { useState } from 'react';
+import fetchWithClient from './lib/fetchClient';
+import {useNavigate} from 'react-router-dom'
 type HeaderProps = {
   userName?: string | null;
 };
@@ -9,15 +11,15 @@ type HeaderProps = {
 export default function Header({ userName }: HeaderProps) {
 
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const navigate = useNavigate();
 
     function handleLogout() {
-        fetch('http://localhost:3000/api/auth/logout', {
+        fetchWithClient('/api/auth/logout', {
             method: 'POST',
-            credentials: 'include'
         })
         .then(response => {
             if (response.ok) {
-                window.location.href = '/login';
+                navigate('/login');
             }
         })
         .catch(error => {
