@@ -48,18 +48,18 @@ export default function LandingPage() {
         </p>
 
         <div className="mt-10 flex flex-col  flex-wrap items-center justify-center gap-6 md:flex-row">
-          <a
-            href="/signup"
+          <NavLink
+              to="/signup"
             className="rounded-lg border border-[#6d28d9] bg-[#6d28d9] px-12 py-5  text-base font-semibold text-white hover:bg-[#5b21b6]"
           >
             Get started free
-          </a>
-          <a
-            href="/login"
+          </NavLink>
+          <NavLink
+            to="/login"
             className="w-full md:w-fit rounded-lg border border-[#6d28d9] bg-[#6d28d9] px-12 py-5  text-base font-semibold text-white hover:bg-[#5b21b6]"
           >
             Login
-          </a>
+          </NavLink>
         </div>
       </main>
     </div>

@@ -4,6 +4,7 @@ import googleIcon from './assets/pngwing.com.png';
 import { useNavigate } from 'react-router-dom';
 import fetchWithClient from './lib/fetchClient';
 import { BASE_URL } from './lib/fetchClient';
+import {NavLink} from 'react-router-dom'
 
 export default function Signup() {
   const [formData, setFormData] = useState({
@@ -183,9 +184,9 @@ export default function Signup() {
           {/* Login Link */}
           <p className="text-center text-[14px]  font-normal text-white">
             Already have an account?{' '}
-            <a href="/login" className="cursor-pointer text-(--frameit-purple) hover:underline">
+            <NavLink to="/login" className="cursor-pointer text-(--frameit-purple) hover:underline">
               Login
-            </a>
+            </NavLink>
           </p>
 
           {/* Divider */}
