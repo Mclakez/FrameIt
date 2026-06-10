@@ -11,11 +11,11 @@ export default function LandingPage() {
             <img
               src={logoSrc}
               alt="FrameIt logo"
-              className="h-11 w-11 object-contain"
+              className="h-10 w-10 md:h-11 md:w-11 object-contain"
             />
             <div className=" leading-tight">
-              <p className="text-xl text-[#fffdfd]">FrameIt</p>
-              <p className="text-xl text-[#fffdfd]">Batch Image Brander</p>
+              <p className="text-xs md:text-xl text-[#fffdfd]">FrameIt</p>
+              <p className="text-xs md:text-xl text-[#fffdfd]">Batch Image Brander</p>
             </div>
           </div>
 
@@ -37,12 +37,12 @@ export default function LandingPage() {
       </header>
 
       <main className="mx-auto flex max-w-360 flex-col items-center px-6 pt-32 text-center">
-        <h1 className="max-w-165  text-5xl font-bold leading-10 md:leading-15 md:text-6xl">
+        <h1 className="max-w-165  text-4xl font-bold leading-10 md:leading-15 md:text-6xl">
           Brand your event photo in{" "}
           <span className="text-[#6d28d9]">seconds</span>
         </h1>
 
-        <p className="mt-12 max-w-119  text-xl text-white">
+        <p className="mt-12 max-w-119 text-xs  md:text-xl text-white">
           Upload a batch of photos, set your overlay once, and download
           professionally branded images
         </p>
@@ -50,13 +50,13 @@ export default function LandingPage() {
         <div className="mt-10 flex flex-col  flex-wrap items-center justify-center gap-6 md:flex-row">
           <NavLink
               to="/signup"
-            className="rounded-lg border border-[#6d28d9] bg-[#6d28d9] px-12 py-5  text-base font-semibold text-white hover:bg-[#5b21b6]"
+            className="rounded-lg border border-[#6d28d9] bg-[#6d28d9] px-12 py-5 text-[10px] md:text-base font-semibold text-white hover:bg-[#5b21b6]"
           >
             Get started free
           </NavLink>
           <NavLink
             to="/login"
-            className="w-full md:w-fit rounded-lg border border-[#6d28d9] bg-[#6d28d9] px-12 py-5  text-base font-semibold text-white hover:bg-[#5b21b6]"
+            className="w-full md:w-fit rounded-lg border border-[#6d28d9] bg-[#6d28d9] px-12 py-5 text-[10px] md:text-base font-semibold text-white hover:bg-[#5b21b6]"
           >
             Login
           </NavLink>
