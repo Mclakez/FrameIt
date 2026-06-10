@@ -1,14 +1,25 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import AuthHeader from './authHeader';
 import googleIcon from './assets/pngwing.com.png';
 import { useNavigate } from 'react-router-dom'
+import fetchWithClient from './lib/fetchClient';
+import { BASE_URL } from './lib/fetchClient';
 
-export default function Login() {
+export default function Login({ setUserName }: { setUserName: (value: string) => void }) {
+  const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     username: '',
     password: ''
   });
+
   const navigate = useNavigate()
+
+  function showError(message:string) {
+      setError(message)
+      setTimeout(() => {
+        setError(null)
+      }, 3000)
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -20,29 +31,34 @@ export default function Login() {
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('Login data:', formData);
+    setError(null)
     const username = formData.username
     const password = formData.password
     
-    const response = await fetch('http://localhost:3000/api/auth/login', {
+    try {
+      const response = await fetchWithClient('/api/auth/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password })
+            body: JSON.stringify({ username, password }),
         })
 
     if (!response.ok) {
         const errorData = await response.json();
-            console.log(errorData.message)
+            showError(errorData.message || 'Login failed')
             return
     }
+
     const data = await response.json()
-    console.log(data);
-    localStorage.setItem('token', data.token)
+    setUserName(data.user.username)
     navigate('/app')
+    } catch (error) {
+      showError('Network error. Please try again.');
+      console.error(error);
+    }
   };
 
   const handleGoogleSignup = () => {
-    window.location.href = 'http://localhost:3000/api/auth/google'
+    window.location.href = `${BASE_URL}/api/auth/google`
    
   };
 
@@ -68,7 +84,7 @@ export default function Login() {
 
       {/* Main Content */}
       <div className="flex-1 flex items-center justify-center py-12 px-4">
-        <div className="bg-[#1f1f1f] rounded-[12px] w-full max-w-[576px] px-8 py-16 flex flex-col gap-4">
+        <div className="bg-[#1f1f1f] rounded-xl w-full max-w-xl px-8 py-16 flex flex-col gap-4">
           {/* Header Text */}
           <div className="flex flex-col">
             <h1 className=" font-medium text-[20px] text-white">
@@ -92,7 +108,7 @@ export default function Login() {
                 value={formData.username}
                 onChange={handleChange}
                 required
-                className="bg-[#403d3d] h-16 rounded-lg px-4 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-(--frameit-purple)"
+                className="bg-[#403d3d] h-16 rounded-lg px-4 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-(--frameit-purple) autofill:bg-red-500 autofill:text-white"
                 placeholder="Enter your username"
               />
             </div>
@@ -117,16 +133,19 @@ export default function Login() {
             {/* Sign Up Button */}
             <button
               type="submit"
-              className="bg-(--frameit-purple) h-16 rounded-lg  font-medium text-[20px] text-white hover:opacity-90 transition-opacity mt-2"
+              className="cursor-pointer bg-(--frameit-purple) h-16 rounded-lg  font-medium text-[20px] text-white hover:opacity-90 transition-opacity mt-2"
             >
               Login
             </button>
+            {error ? (
+  <p className="text-red-400 text-sm">{error}</p>
+) : null}
           </form>
 
           {/* Login Link */}
           <p className="text-center text-[14px]  font-normal text-white">
             No account yet?{' '}
-            <a href="/signup" className="text-(--frameit-purple) hover:underline">
+            <a href="/signup" className="text-(--frameit-purple) hover:underline cursor-pointer">
               Signup
             </a>
           </p>
@@ -144,12 +163,12 @@ export default function Login() {
           <button
             type="button"
             onClick={handleGoogleSignup}
-            className="border-2 border-(--frameit-purple) h-16 rounded-lg flex items-center justify-center gap-4 hover:bg-(--frameit-purple) hover:bg-opacity-10 transition-colors"
+            className="cursor-pointer border-2 border-(--frameit-purple) h-16 rounded-lg flex items-center justify-center gap-4 hover:bg-(--frameit-purple) hover:bg-opacity-10 transition-colors"
           >
             <img
               src={googleIcon}
               alt="Google"
-              className="w-[35px] h-[38px] object-cover"
+              className="w-8.75 h-9.5 object-cover"
             />
             <p className=" font-medium text-[20px] text-white whitespace-nowrap">
               Login with Google

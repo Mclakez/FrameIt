@@ -6,16 +6,22 @@ type ImageCardProps = {
   onClick?: () => void
 }
 
-export default function ImageCard({ src, name, status = 'Active', onCancel , onClick}: ImageCardProps) {
+export default function ImageCard({ src, name, status='Active', onCancel , onClick}: ImageCardProps) {
   return (
     <div className="relative  overflow-hidden rounded-2xl border border-white/10 bg-[#111] shadow-[0_24px_60px_rgba(0,0,0,0.25)]" >
       <div className="relative overflow-hidden" onClick={onClick}>
         <img
           src={src}
           alt={name}
-          className="h-60 w-full object-cover"
+          className="h-40 md:h-60 w-full object-cover"
         />
-        <div className="absolute top-3 right-3 rounded-full bg-black/80 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-white shadow-lg">
+        <div className={`absolute top-3 right-3 rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] shadow-lg ${
+          status === 'Done' 
+            ? 'bg-green-600/80 text-white' 
+            : status === 'Processing'
+            ? 'bg-yellow-600/80 text-white'
+            : 'bg-black/80 text-white'
+        }`}>
           {status}
         </div>
       </div>

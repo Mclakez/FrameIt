@@ -2,6 +2,8 @@ import { useState } from 'react';
 import AuthHeader from './authHeader';
 import googleIcon from './assets/pngwing.com.png';
 import { useNavigate } from 'react-router-dom';
+import fetchWithClient from './lib/fetchClient';
+import { BASE_URL } from './lib/fetchClient';
 
 export default function Signup() {
   const [formData, setFormData] = useState({
@@ -11,7 +13,18 @@ export default function Signup() {
     confirmPassword: '',
   });
 
+  const [error, setError] = useState<string | null>(null);
+
+
   const navigate = useNavigate()
+
+  function showError(message:string) {
+      setError(message)
+
+      setTimeout(() => {
+        setError(null)
+      }, 3000)
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -23,19 +36,34 @@ export default function Signup() {
 
   const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+
+    if (!formData.username || !formData.email || !formData.password || !formData.confirmPassword) {
+  showError('All fields are required');
+  return;
+}
+
     if (formData.password !== formData.confirmPassword) {
-      alert('Passwords do not match');
+      showError('Passwords do not match');
       return;
     }
-    console.log('Signup data:', formData);
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      showError('Please enter a valid email address');
+      return;
+    }
+    
+    if (formData.password !== formData.confirmPassword) {
+      showError('Passwords do not match');
+      return;
+    }
 
     try {
       const username = formData.username
     const password = formData.password
     const email = formData.email
     
-    const response = await fetch('http://localhost:3000/api/auth/signup', {
+    const response = await fetchWithClient('/api/auth/signup', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, password, email })
@@ -43,22 +71,20 @@ export default function Signup() {
 
     if (!response.ok) {
         const errorData = await response.json();
-            console.log(errorData.message)
+            showError(errorData.message || 'Signup failed');
             return
     }
-    const data = await response.json()
-    console.log(data);
     
     navigate('/login')
     } catch (error) {
-      console.log('Error:' ,error)
+      showError('Unable to connect. Please try again later.')
+      console.error(error)
     }
-    // TODO: Add API call for signup
+  
   };
 
   const handleGoogleSignup = () => {
-    // TODO: Add Google OAuth logic
-    console.log('Google signup clicked');
+    window.location.href = `${BASE_URL}/api/auth/google`
   };
 
   return (
@@ -67,7 +93,7 @@ export default function Signup() {
 
       {/* Main Content */}
       <div className="flex-1 flex items-center justify-center py-12 px-4">
-        <div className="bg-[#1f1f1f] rounded-[12px] w-full max-w-[576px] px-8 py-16 flex flex-col gap-4">
+        <div className="bg-[#1f1f1f] rounded-xl w-full max-w-xl px-8 py-16 flex flex-col gap-4">
           {/* Header Text */}
           <div className="flex flex-col">
             <h1 className=" font-medium text-[20px] text-white">
@@ -147,16 +173,17 @@ export default function Signup() {
             {/* Sign Up Button */}
             <button
               type="submit"
-              className="bg-(--frameit-purple) h-16 rounded-lg  font-medium text-[20px] text-white hover:opacity-90 transition-opacity mt-2"
+              className="cursor-pointer bg-(--frameit-purple) h-16 rounded-lg  font-medium text-[20px] text-white hover:opacity-90 transition-opacity mt-2"
             >
               Sign Up
             </button>
+            {error && <p className="text-red-400 text-sm">{error}</p>}
           </form>
 
           {/* Login Link */}
           <p className="text-center text-[14px]  font-normal text-white">
             Already have an account?{' '}
-            <a href="/login" className="text-(--frameit-purple) hover:underline">
+            <a href="/login" className="cursor-pointer text-(--frameit-purple) hover:underline">
               Login
             </a>
           </p>
@@ -174,14 +201,14 @@ export default function Signup() {
           <button
             type="button"
             onClick={handleGoogleSignup}
-            className="border-2 border-(--frameit-purple) h-16 rounded-lg flex items-center justify-center gap-4 hover:bg-(--frameit-purple) hover:bg-opacity-10 transition-colors"
+            className=" cursor-pointer border-2 border-(--frameit-purple) h-16 rounded-lg flex items-center justify-center gap-4 hover:bg-(--frameit-purple) hover:bg-opacity-10 transition-colors"
           >
             <img
               src={googleIcon}
               alt="Google"
-              className="w-[35px] h-[38px] object-cover"
+              className="w-8.75 h-9.5 object-cover"
             />
-            <p className=" font-medium text-[20px] text-white whitespace-nowrap">
+            <p className=" font-medium text-[20px] text-white whitespace-nowrap ">
               Signup with Google
             </p>
           </button>

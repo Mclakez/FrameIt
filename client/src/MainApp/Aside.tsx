@@ -3,28 +3,32 @@ import Button from "./Button";
 import UploadBrandKit from "./UploadBrandKit";
 import PositionRadio from "./PositionRadio";
 import { RefObject, useState} from "react";
-import type { Uploads } from "../App";
+import type { Uploads, BrandCards } from "../App";
+
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
+import fetchWithClient from "../lib/fetchClient";
 
 export type AsideProps = {
-    uploadedImage: Uploads[] | null;
+    uploadedImage: Uploads[] | [];
     setUploadedImage: (value: Uploads[] | []) => void;
     logoImage: HTMLImageElement | null;
     setLogoImage: (value: HTMLImageElement | null) => void;
-    drawCanvas: (value: HTMLImageElement) => void;
+    drawCanvas: (value: HTMLImageElement) => string | undefined;
     canvasRef: RefObject<HTMLCanvasElement | null>;
     setOverlayPosition: (value: string) => void
     overlayPosition: string
-    showBrandModal: boolean;
+    showBrandModal?: boolean;
     setShowBrandModal: (value: boolean) => void;
-    brandCards: any[];
-    setBrandCards: (value: any[]) => void;
+    brandCards?: BrandCards[];
+    setBrandCards: (value: BrandCards[]) => void;
+    previewImage: string | null;
+    setPreviewImage: (value: string | null) => void;
 }
 
-export default function Aside({uploadedImage, setUploadedImage,logoImage, setLogoImage, drawCanvas, canvasRef, setOverlayPosition, overlayPosition, showBrandModal, setShowBrandModal, brandCards, setBrandCards}: AsideProps) {
+export default function Aside({uploadedImage, setUploadedImage,logoImage, setLogoImage, drawCanvas, canvasRef, setOverlayPosition, overlayPosition, setShowBrandModal, setBrandCards, previewImage, setPreviewImage}: AsideProps) {
 
-    
+    const [download, setDownload] = useState(false)
     
     async function downloadImage() {
         // if(!canvasRef.current || !uploadedImage) return
@@ -43,6 +47,7 @@ export default function Aside({uploadedImage, setUploadedImage,logoImage, setLog
 
   uploadedImage?.forEach((image, index) => {
     const base64Data = image.processedImage?.split(",")[1];
+    if (!base64Data) return;
     zip.file(image.name || `frameit-${index + 1}.png`, base64Data, {
       base64: true,
     });
@@ -53,24 +58,50 @@ export default function Aside({uploadedImage, setUploadedImage,logoImage, setLog
        
     }
 
-    function brandImages() {
-        if(!uploadedImage) return
-        for (const entry of uploadedImage) {
-            console.log(entry);
+    // function brandImages() {
+    //     if(!uploadedImage) return
+    //     for (const entry of uploadedImage) {
+    //         console.log(entry);
             
-           const url = drawCanvas(entry.img)
+    //        const url = drawCanvas(entry.img)
 
-           entry.processedImage = url
-           console.log(url);
+    //        entry.processedImage = url
+    //        console.log(url);
            
-        }
+    //     }
+    // }
+
+    function brandImages() {
+      if (uploadedImage && uploadedImage.length > 0 && canvasRef.current) {
+
+          setUploadedImage(uploadedImage.map((entry) => ({
+              ...entry,
+              status: 'Processing'
+          })))
+
+    uploadedImage.forEach((entry) => {
+      const processedUrl = drawCanvas(entry.img);
+      if (processedUrl) {
+        entry.processedImage = processedUrl;
+      }
+      
+      setTimeout(()=> {
+        setUploadedImage(uploadedImage.map((entry) => ({
+              ...entry,
+              status: 'Done'
+          })))
+
+
+          setDownload(true)
+    }, 800);
+      })
+  }
     }
 
 const getCards = async () => {
-      const token = localStorage.getItem('token')
       try {
-        const response = await fetch('http://localhost:3000/api/brandkits',{
-          headers: {'Authorization': `Bearer ${token}` }
+        const response = await fetchWithClient('/api/brandkits',{
+          credentials: 'include',
         })
         const data = await response.json()
         setBrandCards(data.brandKits)
@@ -79,17 +110,20 @@ const getCards = async () => {
       }
     }
 
+    
     return (
-        <div className="w-full max-w-60 mx-auto flex flex-col gap-8 items-center sticky top-16">
-            <UploadImage uploadedImage={uploadedImage} setUploadedImage={setUploadedImage}  drawCanvas={drawCanvas}/>
-            <Button text="Select brand kit" variant="select" onClick={async () =>{
-                 setShowBrandModal(true)
-                 await getCards()
+        <div className="w-full md:max-w-60 mx-auto flex flex-col gap-8 items-center md:sticky md:top-16">
+            <UploadImage uploadedImage={uploadedImage} setUploadedImage={setUploadedImage}/>
+            <Button text="Select brand kit"
+                   variant="select" 
+                   onClick={async () =>{
+                    setShowBrandModal(true)
+                    await getCards()
             }}/>
-            <UploadBrandKit logoImage={logoImage} setLogoImage={setLogoImage} drawCanvas={drawCanvas} />
+            <UploadBrandKit setLogoImage={setLogoImage} previewImage={previewImage} setPreviewImage={setPreviewImage} />
             <PositionRadio  setOverlayPosition={setOverlayPosition} overlayPosition={overlayPosition}/>
-            <Button text="Brand all images" variant="brand" onClick={brandImages}/>
-            <Button text="Download as ZIP" variant="download" onClick={downloadImage}/>
+            <Button disabled={!uploadedImage?.length  || !logoImage} text="Brand all images" variant="brand" onClick={brandImages} />
+            <Button disabled={!uploadedImage?.length || !logoImage || !download}  text="Download as ZIP" variant="download" onClick={downloadImage}/>
             
         </div>
     )

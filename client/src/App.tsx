@@ -9,6 +9,7 @@ import Signup from './Signup'
 import Login from './Login'
 import LandingPage from './Landingpage';
 import AuthSuccess from './AuthSuccess';
+import fetchWithClient from './lib/fetchClient';
 
 export type Uploads = {
   id: number;
@@ -16,16 +17,26 @@ export type Uploads = {
   src: string;
   processedImage: string | null;
   name: string;
+  status?: 'Pending' | 'Processing' | 'Done';
 }
 
+export type BrandCards = {
+  _id: string;
+  user: string;
+  brandName: string;
+  logoUrl: string;
+  cloudinaryId: string;
+};
+
 function App() {
-  const [uploadedImage, setUploadedImage] = useState<Uploads [] >([]);
+  const [uploadedImage, setUploadedImage] = useState<Uploads [] | [] >([]);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [logoImage,setLogoImage] = useState<HTMLImageElement | null>(null);
   const [selectedImage, setSelectedImage] = useState<Uploads | null>(null)
   const [overlayPosition, setOverlayPosition] = useState<string>("top")
   const [showBrandModal, setShowBrandModal] = useState(false);
-  const [brandCards, setBrandCards] = useState<any []>([])
+  const [brandCards, setBrandCards] = useState<BrandCards []>([])
+  const [userName, setUserName] = useState<string | null>(null);
   
   function drawCanvas(img: HTMLImageElement) {
     if (!img || !canvasRef.current) return;
@@ -64,15 +75,32 @@ if (logoImage) {
     return canvas.toDataURL()
   }
 
-  useEffect(() => {
-  if (uploadedImage && uploadedImage.length > 0 && canvasRef.current) {
-    uploadedImage.forEach((entry) => {
-      const processedUrl = drawCanvas(entry.img);
-      entry.processedImage = processedUrl;
-    });
-  }
-}, [uploadedImage, logoImage]);
+//   useEffect(() => {
+//   if (uploadedImage && uploadedImage.length > 0 && canvasRef.current) {
+//     uploadedImage.forEach((entry) => {
+//       const processedUrl = drawCanvas(entry.img);
+//       entry.processedImage = processedUrl;
+//     });
+//   }
+// }, [uploadedImage, logoImage]);
+useEffect(() => {
+  const restoreUser = async () => {
+    try {
+      const res = await fetchWithClient('/api/auth/me', {
+        credentials: "include",
+      });
 
+      if (res.ok) {
+        const data = await res.json();
+        setUserName(data.user.username);
+      }
+    } catch (error) {
+      console.error("Error restoring user:", error);
+    }
+  };
+
+  restoreUser();
+}, []);
 
 
 
@@ -80,11 +108,11 @@ if (logoImage) {
     <>
       
       <Routes>
-        <Route path="/app" element={<MainApp uploadedImage={uploadedImage} setUploadedImage={setUploadedImage} logoImage={logoImage} setLogoImage={setLogoImage} drawCanvas={drawCanvas} canvasRef={canvasRef} setOverlayPosition={setOverlayPosition} overlayPosition={overlayPosition} selectedImage={selectedImage} setSelectedImage={setSelectedImage} showBrandModal={showBrandModal} setShowBrandModal={setShowBrandModal} brandCards={brandCards} setBrandCards={setBrandCards}/>} />
-        <Route path="/brandkit" element={<BrandKit />} />
+        <Route path="/app" element={<MainApp uploadedImage={uploadedImage} setUploadedImage={setUploadedImage} logoImage={logoImage} setLogoImage={setLogoImage} drawCanvas={drawCanvas} canvasRef={canvasRef} setOverlayPosition={setOverlayPosition} overlayPosition={overlayPosition} selectedImage={selectedImage} setSelectedImage={setSelectedImage} showBrandModal={showBrandModal} setShowBrandModal={setShowBrandModal} brandCards={brandCards} setBrandCards={setBrandCards} userName={userName} />} />
+        <Route path="/brandkit" element={<BrandKit userName={userName} />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path='/login' element={<Login/>} />
-        <Route path="/auth-success" element={<AuthSuccess />} />
+        <Route path='/login' element={<Login setUserName={setUserName} />} />
+        <Route path="/auth-success" element={<AuthSuccess setUserName={setUserName} />} />
         <Route path="/" element={<LandingPage />} />
       </Routes>
     

@@ -1,6 +1,5 @@
-@import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-
+@import "tailwindcss";
 @plugin "tailwind-scrollbar";
 
 
@@ -17,4 +16,21 @@
   html, body {
     font-family: 'Inter', sans-serif;
   }
+}
+
+/* For Chrome, Safari, Edge, and Opera */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px #403d3d inset !important;
+  -webkit-text-fill-color: white !important;
+  box-shadow: 0 0 0 30px #403d3d inset !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* For Firefox */
+input:-moz-autofill {
+  background-color: #403d3d !important;
+  color: white !important;
 }
