@@ -21,9 +21,9 @@ async (req, res) => {
                 secure: true,
                 maxAge: 7*24*60*60*1000
             })
-             res.redirect(`http://localhost:5173/auth-success`)
+             res.redirect(`${process.env.CLIENT_URL}/auth-success`)
         } catch (error) {
             console.error('Google callback error:', error)
-             res.redirect('http://localhost:5173/login?error=auth_failed')
+             res.redirect(`${process.env.CLIENT_URL}/login?error=auth_failed`)
         }
     })
