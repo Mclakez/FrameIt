@@ -79,7 +79,7 @@ export default function UploadBrandKit({setLogoImage, previewImage, setPreviewIm
             >
             <input type="file" id="photoInput" accept="image/*" className="hidden" onChange={handleBrandChange} />
             {previewImage ? (
-                <img src={previewImage}/>
+                <img src={previewImage} className="max-h-24 max-w-full object-contain p-2 mx-auto block"/>
             ) : (<strong className="text-center">Click or drag brand kit here</strong>)}
         </div>
       </label>

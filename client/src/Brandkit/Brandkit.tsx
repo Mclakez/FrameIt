@@ -194,7 +194,7 @@ const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
                 <input type="file" id="photoInput" accept="image/*" name="logo" className="hidden" onChange={onFileChange}/>
                 
                 {previewImage ? (
-                    <img src={previewImage}/>
+                    <img src={previewImage} className="max-h-24 max-w-full object-contain p-2 mx-auto block"/>
                 ) : (<strong className="text-center">Click or drag brand kit here</strong>)}
            </div>
             </label>
