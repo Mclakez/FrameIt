@@ -11,6 +11,7 @@ import LandingPage from './Landingpage';
 import AuthSuccess from './AuthSuccess';
 import fetchWithClient from './lib/fetchClient';
 
+
 export type Uploads = {
   id: number;
   img: HTMLImageElement;
@@ -37,6 +38,7 @@ function App() {
   const [showBrandModal, setShowBrandModal] = useState(false);
   const [brandCards, setBrandCards] = useState<BrandCards []>([])
   const [userName, setUserName] = useState<string | null>(null);
+  const [logoSize, setLogoSize] = useState<number>(8);
   
   function drawCanvas(img: HTMLImageElement) {
     if (!img || !canvasRef.current) return;
@@ -53,19 +55,19 @@ function App() {
     // const pad = canvas.height * 0.02; // small gap from the bottom edge
 
 if (logoImage) {
-    const logoH = canvas.height * 0.08; // 8% of image height, small and clean
+    const logoH = canvas.height * (logoSize / 100)
     const logoW = (logoImage.width / logoImage.height) * logoH;
 
     const x = (canvas.width - logoW) / 2;
 
     if (overlayPosition === "top") {
       const y = canvas.height * 0.02; // 2% gap from top
-       ctx.globalAlpha = 0.9;
+       ctx.globalAlpha = 1;
     ctx.drawImage(logoImage, x, y, logoW, logoH);
     ctx.globalAlpha = 1;
     } else if (overlayPosition === "bottom") {
       const y = canvas.height - logoH - (canvas.height * 0.02); // 2% gap from bottom
-       ctx.globalAlpha = 0.9;
+       ctx.globalAlpha = 1;
     ctx.drawImage(logoImage, x, y, logoW, logoH);
     ctx.globalAlpha = 1;
     }
@@ -108,7 +110,7 @@ useEffect(() => {
     <>
       
       <Routes>
-        <Route path="/app" element={<MainApp uploadedImage={uploadedImage} setUploadedImage={setUploadedImage} logoImage={logoImage} setLogoImage={setLogoImage} drawCanvas={drawCanvas} canvasRef={canvasRef} setOverlayPosition={setOverlayPosition} overlayPosition={overlayPosition} selectedImage={selectedImage} setSelectedImage={setSelectedImage} showBrandModal={showBrandModal} setShowBrandModal={setShowBrandModal} brandCards={brandCards} setBrandCards={setBrandCards} userName={userName} />} />
+        <Route path="/app" element={<MainApp uploadedImage={uploadedImage} setUploadedImage={setUploadedImage} logoImage={logoImage} setLogoImage={setLogoImage} drawCanvas={drawCanvas} canvasRef={canvasRef} setOverlayPosition={setOverlayPosition} overlayPosition={overlayPosition} selectedImage={selectedImage} setSelectedImage={setSelectedImage} showBrandModal={showBrandModal} setShowBrandModal={setShowBrandModal} brandCards={brandCards} setBrandCards={setBrandCards} userName={userName} logoSize={logoSize} setLogoSize={setLogoSize} />} />
         <Route path="/brandkit" element={<BrandKit userName={userName} />} />
         <Route path="/signup" element={<Signup />} />
         <Route path='/login' element={<Login setUserName={setUserName} />} />

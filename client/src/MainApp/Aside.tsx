@@ -4,7 +4,7 @@ import UploadBrandKit from "./UploadBrandKit";
 import PositionRadio from "./PositionRadio";
 import { RefObject, useState} from "react";
 import type { Uploads, BrandCards } from "../App";
-
+import LogoSizeSlider from "./LogoSizeSlider";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import fetchWithClient from "../lib/fetchClient";
@@ -24,9 +24,11 @@ export type AsideProps = {
     setBrandCards: (value: BrandCards[]) => void;
     previewImage: string | null;
     setPreviewImage: (value: string | null) => void;
+    logoSize: number
+    setLogoSize: (value: number) => void
 }
 
-export default function Aside({uploadedImage, setUploadedImage,logoImage, setLogoImage, drawCanvas, canvasRef, setOverlayPosition, overlayPosition, setShowBrandModal, setBrandCards, previewImage, setPreviewImage}: AsideProps) {
+export default function Aside({uploadedImage, setUploadedImage,logoImage, setLogoImage, drawCanvas, canvasRef, setOverlayPosition, overlayPosition, setShowBrandModal, setBrandCards, previewImage, setPreviewImage, logoSize, setLogoSize}: AsideProps) {
 
     const [download, setDownload] = useState(false)
     
@@ -122,6 +124,7 @@ const getCards = async () => {
             }}/>
             <UploadBrandKit setLogoImage={setLogoImage} previewImage={previewImage} setPreviewImage={setPreviewImage} />
             <PositionRadio  setOverlayPosition={setOverlayPosition} overlayPosition={overlayPosition}/>
+            <LogoSizeSlider logoSize={logoSize} setLogoSize={setLogoSize} />
             <Button disabled={!uploadedImage?.length  || !logoImage} text="Brand all images" variant="brand" onClick={brandImages} />
             <Button disabled={!uploadedImage?.length || !logoImage || !download}  text="Download as ZIP" variant="download" onClick={downloadImage}/>
             
