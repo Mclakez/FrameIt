@@ -93,23 +93,23 @@ export default function Signup() {
       <AuthHeader/>
 
       {/* Main Content */}
-      <div className="flex-1 flex items-center justify-center py-12 px-4">
-        <div className="bg-[#1f1f1f] rounded-xl w-full max-w-xl px-8 py-16 flex flex-col gap-4">
+      <div className="flex flex-1 items-center justify-center px-3 py-6 md:px-4 md:py-12">
+        <div className="flex w-full max-w-xl flex-col gap-3 rounded-xl bg-[#1f1f1f] px-4 py-8 md:gap-4 md:px-8 md:py-16">
           {/* Header Text */}
-          <div className="flex flex-col">
-            <h1 className=" font-medium text-[20px] text-white">
+          <div className="flex flex-col gap-1">
+            <h1 className="text-xl font-semibold text-white md:text-[20px]">
               Welcome back
             </h1>
-            <p className=" font-medium text-[20px] text-white">
+            <p className="text-sm text-white md:text-[20px]">
               Signup to create a brandkit
             </p>
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSignup} className="flex flex-col gap-4.5">
+          <form onSubmit={handleSignup} className="flex flex-col gap-3 md:gap-4.5">
             {/* Username Field */}
-            <div className="flex flex-col gap-4">
-              <label className=" font-normal text-[20px] text-white">
+            <div className="flex flex-col gap-2 md:gap-4">
+              <label className="text-sm text-white md:text-[20px]">
                 Username
               </label>
               <input
@@ -118,14 +118,14 @@ export default function Signup() {
                 value={formData.username}
                 onChange={handleChange}
                 required
-                className="bg-[#403d3d] h-16 rounded-lg px-4 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-(--frameit-purple)"
+                className="h-12 rounded-lg bg-[#403d3d] px-4 text-sm text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-(--frameit-purple) md:h-16 md:text-base"
                 placeholder="Enter your username"
               />
             </div>
 
             {/* Email Field */}
-            <div className="flex flex-col gap-4">
-              <label className=" font-normal text-[20px] text-white">
+            <div className="flex flex-col gap-2 md:gap-4">
+              <label className="text-sm text-white md:text-[20px]">
                 Email
               </label>
               <input
@@ -134,14 +134,14 @@ export default function Signup() {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="bg-[#403d3d] h-16 rounded-lg px-4 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-(--frameit-purple)"
+                className="h-12 rounded-lg bg-[#403d3d] px-4 text-sm text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-(--frameit-purple) md:h-16 md:text-base"
                 placeholder="Enter your email"
               />
             </div>
 
             {/* Password Field */}
-            <div className="flex flex-col gap-4">
-              <label className=" font-normal text-[20px] text-white">
+            <div className="flex flex-col gap-2 md:gap-4">
+              <label className="text-sm text-white md:text-[20px]">
                 Password
               </label>
               <input
@@ -150,14 +150,14 @@ export default function Signup() {
                 value={formData.password}
                 onChange={handleChange}
                 required
-                className="bg-[#403d3d] h-16 rounded-lg px-4 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-(--frameit-purple)"
+                className="h-12 rounded-lg bg-[#403d3d] px-4 text-sm text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-(--frameit-purple) md:h-16 md:text-base"
                 placeholder="Enter your password"
               />
             </div>
 
             {/* Confirm Password Field */}
-            <div className="flex flex-col gap-4">
-              <label className=" font-normal text-[20px] text-white">
+            <div className="flex flex-col gap-2 md:gap-4">
+              <label className="text-sm text-white md:text-[20px]">
                 Confirm password
               </label>
               <input
@@ -166,7 +166,7 @@ export default function Signup() {
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 required
-                className="bg-[#403d3d] h-16 rounded-lg px-4 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-(--frameit-purple)"
+                className="h-12 rounded-lg bg-[#403d3d] px-4 text-sm text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-(--frameit-purple) md:h-16 md:text-base"
                 placeholder="Confirm your password"
               />
             </div>
@@ -174,7 +174,7 @@ export default function Signup() {
             {/* Sign Up Button */}
             <button
               type="submit"
-              className="cursor-pointer bg-(--frameit-purple) h-16 rounded-lg  font-medium text-[20px] text-white hover:opacity-90 transition-opacity mt-2"
+              className="mt-2 h-12 cursor-pointer rounded-lg bg-(--frameit-purple) text-sm font-medium text-white transition-opacity hover:opacity-90 md:h-16 md:text-[20px]"
             >
               Sign Up
             </button>
@@ -182,7 +182,7 @@ export default function Signup() {
           </form>
 
           {/* Login Link */}
-          <p className="text-center text-[14px]  font-normal text-white">
+          <p className="text-center text-sm font-normal text-white md:text-[14px]">
             Already have an account?{' '}
             <NavLink to="/login" className="cursor-pointer text-(--frameit-purple) hover:underline">
               Login
@@ -192,7 +192,7 @@ export default function Signup() {
           {/* Divider */}
           <div className="flex items-center justify-center gap-3">
             
-            <p className=" font-medium text-[20px] text-white whitespace-nowrap">
+            <p className="whitespace-nowrap text-sm font-medium text-white md:text-[20px]">
               or
             </p>
             
@@ -202,14 +202,14 @@ export default function Signup() {
           <button
             type="button"
             onClick={handleGoogleSignup}
-            className=" cursor-pointer border-2 border-(--frameit-purple) h-16 rounded-lg flex items-center justify-center gap-4 hover:bg-(--frameit-purple) hover:bg-opacity-10 transition-colors"
+            className="flex h-12 cursor-pointer items-center justify-center gap-3 rounded-lg border-2 border-(--frameit-purple) transition-colors hover:bg-(--frameit-purple) hover:bg-opacity-10 md:h-16 md:gap-4"
           >
             <img
               src={googleIcon}
               alt="Google"
               className="w-8.75 h-9.5 object-cover"
             />
-            <p className=" font-medium text-[20px] text-white whitespace-nowrap ">
+            <p className="whitespace-nowrap text-sm font-medium text-white md:text-[20px]">
               Signup with Google
             </p>
           </button>
