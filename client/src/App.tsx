@@ -1,7 +1,7 @@
 import './App.css'
 
 
-import { useState, useRef, useEffect} from "react";
+import { useState, useRef, useEffect, useCallback} from "react";
 import { Routes, Route } from "react-router-dom";
 import BrandKit from './Brandkit/Brandkit';
 import MainApp from './MainApp/MainApp';
@@ -39,52 +39,69 @@ function App() {
   const [brandCards, setBrandCards] = useState<BrandCards []>([])
   const [userName, setUserName] = useState<string | null>(null);
   const [logoSize, setLogoSize] = useState<number>(8);
-  
-  function drawCanvas(img: HTMLImageElement) {
+  const [logoPadding, setLogoPadding] = useState<number>(2)
+
+  const drawCanvas = useCallback((img: HTMLImageElement) => {
     if (!img || !canvasRef.current) return;
 
-    const canvas = canvasRef.current
+    const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
-    // Canvas size matching image
+
     canvas.width = img.width;
     canvas.height = img.height;
-
-    // Draw photo
     ctx.drawImage(img, 0, 0);
-    // const pad = canvas.height * 0.02; // small gap from the bottom edge
 
-if (logoImage) {
-    const logoH = canvas.height * (logoSize / 100)
-    const logoW = (logoImage.width / logoImage.height) * logoH;
+    if (logoImage) {
+        const logoH = canvas.height * (logoSize / 100);
+        const logoW = (logoImage.width / logoImage.height) * logoH;
+        const x = (canvas.width - logoW) / 2;
+        const y = canvas.height * (logoPadding / 100);
 
-    const x = (canvas.width - logoW) / 2;
+        ctx.globalAlpha = 0.9;
 
-    if (overlayPosition === "top") {
-      const y = canvas.height * 0.02; // 2% gap from top
-       ctx.globalAlpha = 1;
-    ctx.drawImage(logoImage, x, y, logoW, logoH);
-    ctx.globalAlpha = 1;
-    } else if (overlayPosition === "bottom") {
-      const y = canvas.height - logoH - (canvas.height * 0.02); // 2% gap from bottom
-       ctx.globalAlpha = 1;
-    ctx.drawImage(logoImage, x, y, logoW, logoH);
-    ctx.globalAlpha = 1;
+        if (overlayPosition === "top") {
+            ctx.drawImage(logoImage, x, y, logoW, logoH);
+        } else if (overlayPosition === "bottom") {
+            ctx.drawImage(logoImage, x, canvas.height - logoH - y, logoW, logoH);
+        }
+
+        ctx.globalAlpha = 1;
     }
-    
-   
-}
-    return canvas.toDataURL()
-  }
 
-//   useEffect(() => {
-//   if (uploadedImage && uploadedImage.length > 0 && canvasRef.current) {
-//     uploadedImage.forEach((entry) => {
-//       const processedUrl = drawCanvas(entry.img);
-//       entry.processedImage = processedUrl;
-//     });
-//   }
-// }, [uploadedImage, logoImage]);
+    return canvas.toDataURL();
+}, [logoImage, overlayPosition, logoSize, logoPadding]);
+
+// useEffect(() => {
+//   const timer = setTimeout(() => {
+//     if (!uploadedImage.length || !logoImage) return;
+
+//     const updated = uploadedImage.map((entry) => ({
+//       ...entry,
+//       processedImage: drawCanvas(entry.img) ?? null,
+//     }));
+
+//     setUploadedImage(updated);
+//   }, 300);
+
+//   return () => clearTimeout(timer);
+// }, [logoImage, overlayPosition, logoSize, logoPadding]);
+
+useEffect(() => {
+  const timer = setTimeout(() => {
+    if (!uploadedImage.length || !logoImage) return;
+
+    const updated = uploadedImage.map((entry) => ({
+      ...entry,
+      processedImage: drawCanvas(entry.img) ?? null,
+    }));
+
+    setUploadedImage(updated);
+  }, 100);
+
+  return () => clearTimeout(timer);
+}, [drawCanvas]);
+
 useEffect(() => {
   const restoreUser = async () => {
     try {
@@ -110,7 +127,7 @@ useEffect(() => {
     <>
       
       <Routes>
-        <Route path="/app" element={<MainApp uploadedImage={uploadedImage} setUploadedImage={setUploadedImage} logoImage={logoImage} setLogoImage={setLogoImage} drawCanvas={drawCanvas} canvasRef={canvasRef} setOverlayPosition={setOverlayPosition} overlayPosition={overlayPosition} selectedImage={selectedImage} setSelectedImage={setSelectedImage} showBrandModal={showBrandModal} setShowBrandModal={setShowBrandModal} brandCards={brandCards} setBrandCards={setBrandCards} userName={userName} logoSize={logoSize} setLogoSize={setLogoSize} />} />
+        <Route path="/app" element={<MainApp uploadedImage={uploadedImage} setUploadedImage={setUploadedImage} logoImage={logoImage} setLogoImage={setLogoImage} drawCanvas={drawCanvas} canvasRef={canvasRef} setOverlayPosition={setOverlayPosition} overlayPosition={overlayPosition} selectedImage={selectedImage} setSelectedImage={setSelectedImage} showBrandModal={showBrandModal} setShowBrandModal={setShowBrandModal} brandCards={brandCards} setBrandCards={setBrandCards} userName={userName} logoSize={logoSize} setLogoSize={setLogoSize} logoPadding={logoPadding} setLogoPadding={setLogoPadding} />} />
         <Route path="/brandkit" element={<BrandKit userName={userName} />} />
         <Route path="/signup" element={<Signup />} />
         <Route path='/login' element={<Login setUserName={setUserName} />} />

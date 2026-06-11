@@ -1,9 +1,11 @@
 type PositionRadioProps = {
     setOverlayPosition: (value: string) => void
     overlayPosition: string
+    logoPadding: number
+    setLogoPadding: (value: number) => void
 }
 
-export default function PositionRadio({setOverlayPosition, overlayPosition}: PositionRadioProps) {
+export default function PositionRadio({setOverlayPosition, overlayPosition, logoPadding, setLogoPadding}: PositionRadioProps) {
     return(
         <>
             <div className="w-full flex gap-6 justify-start">
@@ -22,6 +24,20 @@ export default function PositionRadio({setOverlayPosition, overlayPosition}: Pos
                     </div>
                     <span className="text-white">Bottom</span>
                 </label>
+            </div>
+            <div className="w-full text-white flex flex-col gap-2">
+            <div className="flex justify-between items-center">
+                <span>Padding</span>
+                <span className="text-sm text-(--frameit-purple)">{logoPadding}%</span>
+            </div>
+            <input
+                type="range"
+                min={1}
+                max={15}
+                value={logoPadding}
+                onChange={(e) => setLogoPadding(Number(e.target.value))}
+                className="w-full accent-(--frameit-purple)"
+            />
             </div>
         </>
     )

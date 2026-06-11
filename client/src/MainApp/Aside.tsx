@@ -26,9 +26,11 @@ export type AsideProps = {
     setPreviewImage: (value: string | null) => void;
     logoSize: number
     setLogoSize: (value: number) => void
+    logoPadding: number
+    setLogoPadding: (value: number) => void
 }
 
-export default function Aside({uploadedImage, setUploadedImage,logoImage, setLogoImage, drawCanvas, canvasRef, setOverlayPosition, overlayPosition, setShowBrandModal, setBrandCards, previewImage, setPreviewImage, logoSize, setLogoSize}: AsideProps) {
+export default function Aside({uploadedImage, setUploadedImage,logoImage, setLogoImage, drawCanvas, canvasRef, setOverlayPosition, overlayPosition, setShowBrandModal, setBrandCards, previewImage, setPreviewImage, logoSize, setLogoSize, logoPadding, setLogoPadding}: AsideProps) {
 
     const [download, setDownload] = useState(false)
     
@@ -123,7 +125,7 @@ const getCards = async () => {
                     await getCards()
             }}/>
             <UploadBrandKit setLogoImage={setLogoImage} previewImage={previewImage} setPreviewImage={setPreviewImage} />
-            <PositionRadio  setOverlayPosition={setOverlayPosition} overlayPosition={overlayPosition}/>
+            <PositionRadio  setOverlayPosition={setOverlayPosition} overlayPosition={overlayPosition} logoPadding={logoPadding} setLogoPadding={setLogoPadding}/>
             <LogoSizeSlider logoSize={logoSize} setLogoSize={setLogoSize} />
             <Button disabled={!uploadedImage?.length  || !logoImage} text="Brand all images" variant="brand" onClick={brandImages} />
             <Button disabled={!uploadedImage?.length || !logoImage || !download}  text="Download as ZIP" variant="download" onClick={downloadImage}/>
