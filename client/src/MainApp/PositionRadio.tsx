@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 type PositionRadioProps = {
     setOverlayPosition: (value: string) => void
     overlayPosition: string
@@ -6,6 +8,18 @@ type PositionRadioProps = {
 }
 
 export default function PositionRadio({setOverlayPosition, overlayPosition, logoPadding, setLogoPadding}: PositionRadioProps) {
+
+    const [localPadding, setLocalPadding] = useState(logoPadding);
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Number(e.target.value);
+    setLocalPadding(value);
+  };
+
+  const handleCommit = (e: React.PointerEvent<HTMLInputElement>) => {
+    setLogoPadding(Number((e.target as HTMLInputElement).value));
+  };
+
     return(
         <>
             <div className="w-full flex gap-6 justify-start">
@@ -34,8 +48,9 @@ export default function PositionRadio({setOverlayPosition, overlayPosition, logo
                 type="range"
                 min={1}
                 max={15}
-                value={logoPadding}
-                onChange={(e) => setLogoPadding(Number(e.target.value))}
+                value={localPadding}
+                onChange={handleChange}
+                onPointerUp={handleCommit}
                 className="w-full accent-(--frameit-purple)"
             />
             </div>

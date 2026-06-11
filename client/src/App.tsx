@@ -72,35 +72,24 @@ function App() {
     return canvas.toDataURL();
 }, [logoImage, overlayPosition, logoSize, logoPadding]);
 
-// useEffect(() => {
-//   const timer = setTimeout(() => {
-//     if (!uploadedImage.length || !logoImage) return;
 
-//     const updated = uploadedImage.map((entry) => ({
-//       ...entry,
-//       processedImage: drawCanvas(entry.img) ?? null,
-//     }));
-
-//     setUploadedImage(updated);
-//   }, 300);
-
-//   return () => clearTimeout(timer);
-// }, [logoImage, overlayPosition, logoSize, logoPadding]);
 
 useEffect(() => {
   const timer = setTimeout(() => {
-    if (!uploadedImage.length || !logoImage) return;
+    if (!selectedImage || !logoImage) return;
 
-    const updated = uploadedImage.map((entry) => ({
-      ...entry,
-      processedImage: drawCanvas(entry.img) ?? null,
-    }));
+    const previewUrl = drawCanvas(selectedImage.img);
+    if (!previewUrl) return;
 
-    setUploadedImage(updated);
-  }, 100);
+    setSelectedImage((prev) =>
+      prev && prev.id === selectedImage.id
+        ? { ...prev, processedImage: previewUrl }
+        : prev
+    );
+  }, 120);
 
   return () => clearTimeout(timer);
-}, [drawCanvas]);
+}, [selectedImage?.id, logoImage, drawCanvas, logoSize, logoPadding, overlayPosition]);
 
 useEffect(() => {
   const restoreUser = async () => {
@@ -120,6 +109,7 @@ useEffect(() => {
 
   restoreUser();
 }, []);
+
 
 
 
