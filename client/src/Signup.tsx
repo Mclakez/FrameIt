@@ -7,6 +7,7 @@ import { BASE_URL } from './lib/fetchClient';
 import {NavLink} from 'react-router-dom'
 
 export default function Signup() {
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -37,24 +38,29 @@ export default function Signup() {
 
   const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsLoading(true);
 
     if (!formData.username || !formData.email || !formData.password || !formData.confirmPassword) {
-  showError('All fields are required');
-  return;
-}
+      setIsLoading(false);
+      showError('All fields are required');
+      return;
+    }
 
     if (formData.password !== formData.confirmPassword) {
+      setIsLoading(false);
       showError('Passwords do not match');
       return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
+      setIsLoading(false);
       showError('Please enter a valid email address');
       return;
     }
     
     if (formData.password !== formData.confirmPassword) {
+      setIsLoading(false);
       showError('Passwords do not match');
       return;
     }
@@ -80,6 +86,8 @@ export default function Signup() {
     } catch (error) {
       showError('Unable to connect. Please try again later.')
       console.error(error)
+    } finally {
+      setIsLoading(false)
     }
   
   };
@@ -174,9 +182,10 @@ export default function Signup() {
             {/* Sign Up Button */}
             <button
               type="submit"
-              className="mt-2 h-12 cursor-pointer rounded-lg bg-(--frameit-purple) text-sm font-medium text-white transition-opacity hover:opacity-90 md:h-16 md:text-[20px]"
+              disabled={isLoading}
+              className="mt-2 h-12 cursor-pointer rounded-lg bg-(--frameit-purple) text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70 md:h-16 md:text-[20px]"
             >
-              Sign Up
+              {isLoading ? 'Signing up...' : 'Sign Up'}
             </button>
             {error && <p className="text-red-400 text-sm">{error}</p>}
           </form>

@@ -17,6 +17,7 @@ type Card = {
 export default function BrandKit({userName}: { userName: string | null}) {
 
     const [isDragging, setIsDragging] = useState(false)
+    const [isSubmitting, setIsSubmitting] = useState(false)
 
     const [previewImage, setPreviewImage] = useState<string | null>(null)
     const [cards, setCards] = useState<Card[]>([]);
@@ -55,6 +56,7 @@ const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
 
     const handleAddCard = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setIsSubmitting(true);
         console.log('Brand kit data:', formData);
         const brandName = formData.brandname
         const logo = formData.logo
@@ -87,6 +89,8 @@ const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
         await getCards()
         } catch (error) {
           console.log('Error:', error);
+        } finally {
+          setIsSubmitting(false);
         }
         
     }
@@ -218,9 +222,10 @@ const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
             {/* Done button */}
             <button
               type="submit"
-              className="bg-(--frameit-purple) h-18 rounded-lg font-medium text-[20px] text-white hover:opacity-90 transition-opacity mt-2 cursor-pointer"
+              disabled={isSubmitting}
+              className="bg-(--frameit-purple) h-18 rounded-lg font-medium text-[20px] text-white hover:opacity-90 transition-opacity mt-2 cursor-pointer disabled:cursor-not-allowed disabled:opacity-70"
             >
-              Done
+              {isSubmitting ? 'Saving...' : 'Done'}
             </button>
           </form>
 

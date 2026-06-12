@@ -8,10 +8,12 @@ import {NavLink} from 'react-router-dom'
 
 export default function Login({ setUserName }: { setUserName: (value: string) => void }) {
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     username: '',
     password: ''
   });
+  
 
   const navigate = useNavigate()
 
@@ -33,6 +35,7 @@ export default function Login({ setUserName }: { setUserName: (value: string) =>
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null)
+    setIsLoading(true)
     const username = formData.username
     const password = formData.password
     
@@ -55,6 +58,8 @@ export default function Login({ setUserName }: { setUserName: (value: string) =>
     } catch (error) {
       showError('Network error. Please try again.');
       console.error(error);
+    } finally {
+      setIsLoading(false)
     }
   };
 
@@ -134,9 +139,10 @@ export default function Login({ setUserName }: { setUserName: (value: string) =>
             {/* Sign Up Button */}
             <button
               type="submit"
-              className="mt-2 h-12 cursor-pointer rounded-lg bg-(--frameit-purple) text-sm font-medium text-white transition-opacity hover:opacity-90 md:h-16 md:text-[20px]"
+              disabled={isLoading}
+              className="mt-2 h-12 cursor-pointer rounded-lg bg-(--frameit-purple) text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70 md:h-16 md:text-[20px]"
             >
-              Login
+              {isLoading ? 'Logging in...' : 'Login'}
             </button>
             {error ? (
   <p className="text-red-400 text-sm">{error}</p>
