@@ -57,7 +57,6 @@ const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     const handleAddCard = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setIsSubmitting(true);
-        console.log('Brand kit data:', formData);
         const brandName = formData.brandname
         const logo = formData.logo
 
