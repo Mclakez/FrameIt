@@ -1,12 +1,6 @@
-import { Uploads } from "../App";
-
-
-export type PreviewProps = {
-    selectedImage: Uploads | null;
-    
-}
-
-export default function Preview({selectedImage}: PreviewProps) {
+import { useCanvasContext } from "../contexts/CanvasContext"
+export default function Preview() {
+    const { selectedImage } = useCanvasContext()
     
     return (
         <div className="flex p-8 sticky top-16">
@@ -18,11 +12,3 @@ export default function Preview({selectedImage}: PreviewProps) {
         </div>
     )
 } 
-
-{/* <img 
-                src={
-                    selectedImage?.processedImage ||
-                    selectedImage?.src
-                }
-                className="w-full block max-w-full object-contain"
-            /> */}

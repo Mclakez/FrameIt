@@ -1,14 +1,9 @@
 import { useState } from "react";
+import { useCanvasContext } from "../contexts/CanvasContext";
 
-type LogoSizeSliderProps = {
-  logoSize: number;
-  setLogoSize: (value: number) => void;
-};
 
-export default function LogoSizeSlider({
-  logoSize,
-  setLogoSize,
-}: LogoSizeSliderProps) {
+export default function LogoSizeSlider() {
+ const { logoSize, setLogoSize} = useCanvasContext()
   const [localSize, setLocalSize] = useState(logoSize);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

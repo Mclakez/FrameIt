@@ -1,23 +1,19 @@
-import { RefObject } from "react";
+import { useCanvasContext } from "../contexts/CanvasContext";
 import ImageCard from "./ImageCard";
-import type { Uploads, BrandCards } from "../App";
+import type {BrandCards } from "../App";
 import BrandKitCard from "./BrandKitCard";
 
 type ImageScreenProps = {
-    canvasRef: RefObject<HTMLCanvasElement | null>;
-    uploadedImage: Uploads[] | null;
-    selectedImage: Uploads | null
-    setSelectedImage: (value: Uploads | null) => void
-    setUploadedImage: (value: Uploads[] | []) => void
     showBrandModal: boolean;
     setShowBrandModal: (value: boolean) => void;
     brandCards: BrandCards[];
     setBrandCards?: (value: BrandCards[]) => void;
-    setLogoImage: (value: HTMLImageElement | null) => void;
-    setPreviewImage: (value: string | null) => void;
+    setPreviewImage: (value: string | null) => void
 }
 
-export default function ImageScreen({canvasRef, uploadedImage,selectedImage, setSelectedImage, setUploadedImage, showBrandModal, setShowBrandModal, brandCards, setLogoImage, setPreviewImage}: ImageScreenProps) {
+export default function ImageScreen({showBrandModal, setShowBrandModal, brandCards, setPreviewImage}: ImageScreenProps) {
+const {uploadedImage, setUploadedImage, setLogoImage, setSelectedImage, canvasRef, selectedImage} = useCanvasContext()
+
 function handleDelete(id: number) {
     setUploadedImage(uploadedImage?.filter(img => img.id !== id) ?? [])
 }

@@ -1,13 +1,8 @@
 import { useState } from "react";
+import { useCanvasContext } from "../contexts/CanvasContext";
 
-type PositionRadioProps = {
-    setOverlayPosition: (value: string) => void
-    overlayPosition: string
-    logoPadding: number
-    setLogoPadding: (value: number) => void
-}
-
-export default function PositionRadio({setOverlayPosition, overlayPosition, logoPadding, setLogoPadding}: PositionRadioProps) {
+export default function PositionRadio() {
+    const { logoPadding, setLogoPadding, overlayPosition, setOverlayPosition } = useCanvasContext()
 
     const [localPadding, setLocalPadding] = useState(logoPadding);
 

@@ -1,12 +1,13 @@
 import { useState } from "react"
+import { useCanvasContext } from "../contexts/CanvasContext"
 
 type uploadBrandKitProps = {
-    setLogoImage: (value: HTMLImageElement | null) => void;  
     previewImage: string | null;
     setPreviewImage: (value: string | null) => void;
 }
 
-export default function UploadBrandKit({setLogoImage, previewImage, setPreviewImage}: uploadBrandKitProps) {
+export default function UploadBrandKit({previewImage, setPreviewImage}: uploadBrandKitProps) {
+    const {setLogoImage} = useCanvasContext()
     const [isDragging, setIsDragging] = useState(false)
     
 

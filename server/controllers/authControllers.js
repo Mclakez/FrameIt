@@ -38,11 +38,13 @@ export async function login(req, res) {
         const existingUser = await User.findOne({ username })
         if(!existingUser){
             res.status(400).json({message: "Invalid credentials"})
+            return
         }
 
         const isMatch = await bcrypt.compare(password, existingUser.password)
         if(!isMatch){
             res.status(400).json({message: "Invalid credentials"})
+            return
         }
 
         const token = await generateToken(existingUser)

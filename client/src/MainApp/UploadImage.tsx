@@ -1,14 +1,12 @@
 
 import { useState } from "react";
-import type { Uploads } from "../App"
+import { useCanvasContext } from "../contexts/CanvasContext";
 import { useImageUpload } from "../hooks/useImageUpload";
 
-type uploadedImageProps = {
-    uploadedImage: Uploads[] | [];
-    setUploadedImage: (value: Uploads[] | []) => void;  
-}
 
-export default function UploadImage({uploadedImage, setUploadedImage}: uploadedImageProps) {
+
+export default function UploadImage() {
+    const { setUploadedImage } = useCanvasContext()
     const [isDragging, setIsDragging] = useState(false)
     const {processFiles} = useImageUpload(setUploadedImage)
 
